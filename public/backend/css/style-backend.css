@@ -1,0 +1,27 @@
+.marquee {
+  background: #fed700;
+  margin: 0 15px 0;
+  font-size: 25px;
+}
+
+.heart {
+  font-size: 25px;
+  color: red;
+  margin: 0 23px 0;
+}
+
+.heart-crack {
+  font-size: 25px;
+  color: green;
+  margin: 0 23px 0;
+}
+
+.button {
+  /* width: 150px; */
+  height: 34px !important;
+}
+
+.button_list {
+  width: 37px;
+  height: 34px;
+}
