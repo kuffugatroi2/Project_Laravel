@@ -108,14 +108,12 @@ class ProductRepository implements ProductRepositoryInterface
         return $product;
     }
 
-    public function activeProduct($id)
+    public function statusChange($id, $productStatus)
     {
-        return Product::where('product_id', $id)->update(['product_status' => Product::activeStatus]);
-    }
-
-    public function unactiveProduct($id)
-    {
-        return Product::where('product_id', $id)->update(['product_status' => Product::unactiveStatus]);
+        $productStatus = $productStatus === Product::activeStatus ? Product::unactiveStatus : Product::activeStatus;
+        Product::where('product_id', $id)->update(['product_status' => $productStatus]);
+        $product = $this->edit($id);
+        return $product['product_status'];
     }
 
     public function saveProductDetail($request, $idProduct, $today)

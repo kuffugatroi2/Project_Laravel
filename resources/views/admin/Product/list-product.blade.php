@@ -6,19 +6,9 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12">
-                    @include('alert')
-                    <?php
-                        $message = Session::get('message');
-                        if ($message) {
-                            echo '<div class="alert alert-success">'.$message.'</div>';
-                            Session::put('message', null);
-                        }
-                    ?>
-                    @if (session('error'))
-                        <div class="alert alert-danger">
-                            {{session('error')}}
-                        </div>
-                    @endif
+                    <div id="alert" style="opacity: 1; transition: opacity 2s;">
+                        @include('alert')
+                    </div>
                     <form action="{{ route('products.index') }}" method="GET">
                         <a class="btn btn-success btn-sm button-status" href="{{ route('products.create') }}">
                             <i class="fa fa-plus-circle"> Thêm mới</i>

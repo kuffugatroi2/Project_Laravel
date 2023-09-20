@@ -108,18 +108,15 @@ Route::middleware(['auth'])->group(function () {
 
         //Categories
         Route::resource('categories', CategoryProductController::class);
-        Route::get('active-category/{id}', [CategoryProductController::class, 'activeCategory'])->name('categories.active_category');
-        Route::get('unactive-category/{id}', [CategoryProductController::class, 'unactiveCategory'])->name('categories.unactive_category');
+        Route::get('status-change-category/{id}', [CategoryProductController::class, 'statusChange'])->name('categories.status_change');
 
         //Payment
         Route::resource('payments', PaymentController::class);
-        Route::get('active-payment/{id}', [PaymentController::class, 'activePayment'])->name('payments.active_payment');
-        Route::get('unactive-payment/{id}', [PaymentController::class, 'unactivePayment'])->name('payments.unactive_payment');
+        Route::get('status-change-payment/{id}', [PaymentController::class, 'statusChange'])->name('payments.status_change');
 
         //Products
         Route::resource('products', ProductController::class);
-        Route::get('active-product/{id}', [ProductController::class, 'activeProduct'])->name('products.active_product');
-        Route::get('unactive-product/{id}', [ProductController::class, 'unactiveProduct'])->name('products.unactive_product');
+        Route::get('status-change-product/{id}', [ProductController::class, 'statusChange'])->name('products.status_change');
         Route::get('brands-ajax/{idItem}', [ProductController::class, 'getBand']);
         Route::get('categories-ajax/{idBrand}', [ProductController::class, 'getCategory']);
         // details category

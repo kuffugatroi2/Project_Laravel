@@ -11,6 +11,9 @@ function convertSatus($status, $id)
      *  Sử dụng strpos() kiểm tra trong url sau khi cắt chuỗi có ? hay ko (giả sử brands?page=2)
      *  Nếu có thì cắt bỏ toàn các params truyền vào sau ? => kết quả: brands
      *  Kiểm tra xem tồn tại "url" hay ko? và kiểm tra status và cutCurrentURL tương ứng để hiển thị link thay đổi status
+     * ------------------------------------------------------------------------------------------------------------------------
+     * event.stopImmediatePropagation(): hàm route() sẽ không được gọi lại khi thay đổi id (ngăn chặn việc cố tình thay đổi id).
+     * Vì vậy trong trường hợp cố tình F12 thay đổi id (trường hợp id không tồn tại) là không thành công.
      */
 
     $currentURL = $_SERVER['REQUEST_URI']; // lấy url
@@ -20,28 +23,26 @@ function convertSatus($status, $id)
     }
     $html = '';
     if (isset($currentURL)) {
-        if ($status == unactiveStatus && $cutCurrentURL == 'items') {
-            // $html = '<a href="'.route('items.active_item', $id).'"><span class="fa fa-solid fa-laptop laptop"></span></a>';
-            $html .= '<a onclick="if(confirm(\'Bạn có chắc muốn kích hoạt không?\')){window.location.href=\'' . route('items.status_change', $id) . '\'}"><span class="fa fa-solid fa-laptop laptop"></span></a>';
-        } elseif ($status == activeStatus && $cutCurrentURL == 'items') {
-            $html .= '<a onclick="if(confirm(\'Bạn có chắc muốn tắt kích hoạt không?\')){window.location.href=\'' . route('items.status_change', $id) . '\'}"><span class="fa fa-solid fa-laptop laptop-crack"></span></a>';
-        } elseif ($status == unactiveStatus && $cutCurrentURL == 'brands') {
-            $html .= '<a onclick="if(confirm(\'Bạn có chắc muốn kích hoạt không?\')){window.location.href=\'' . route('brands.status_change', $id) . '\'}"><span class="fa fa-solid fa-laptop laptop"></span></a>';
-        } elseif ($status == activeStatus && $cutCurrentURL == 'brands') {
-            $html .= '<a onclick="if(confirm(\'Bạn có chắc muốn tắt kích hoạt không?\')){window.location.href=\'' . route('brands.status_change', $id) . '\'}"><span class="fa fa-solid fa-laptop laptop-crack"></span></a>';
-        } elseif ($status == unactiveStatus && $cutCurrentURL == 'categories') {
-            $html .= '<a onclick="if(confirm(\'Bạn có chắc muốn kích hoạt không?\')){window.location.href=\'' . route('categories.active_category', $id) . '\'}"><span class="fa fa-solid fa-laptop laptop"></span></a>';
-        } elseif ($status == activeStatus && $cutCurrentURL == 'categories') {
-            $html .= '<a onclick="if(confirm(\'Bạn có chắc muốn tắt kích hoạt không?\')){window.location.href=\'' . route('categories.unactive_category', $id) . '\'}"><span class="fa fa-solid fa-laptop laptop-crack"></span></a>';
-        } elseif ($status == unactiveStatus && $cutCurrentURL == 'products') {
-            $html .= '<a onclick="if(confirm(\'Bạn có chắc muốn kích hoạt không?\')){window.location.href=\'' . route('products.active_product', $id) . '\'}"><span class="fa fa-solid fa-laptop laptop"></span></a>';
-        } elseif ($status == activeStatus && $cutCurrentURL == 'products') {
-            $html .= '<a onclick="if(confirm(\'Bạn có chắc muốn tắt kích hoạt không?\')){window.location.href=\'' . route('products.unactive_product', $id) . '\'}"><span class="fa fa-solid fa-laptop laptop-crack"></span></a>';
-        } elseif ($status == unactiveStatus && $cutCurrentURL == 'payments') {
-            $html .= '<a onclick="if(confirm(\'Bạn có chắc muốn kích hoạt không?\')){window.location.href=\'' . route('payments.active_payment', $id) . '\'}"><span class="fa fa-solid fa-dollar laptop"></span></a>';
-        } elseif ($status == activeStatus && $cutCurrentURL == 'payments') {
-            $html .= '<a onclick="if(confirm(\'Bạn có chắc muốn tắt kích hoạt không?\')){window.location.href=\'' . route('payments.unactive_payment', $id) . '\'}"><span class="fa fa-solid fa-dollar laptop-crack"></span></a>';
+        switch ($cutCurrentURL) {
+            case 'items':
+                $html .= '<a onclick="event.stopImmediatePropagation();if(confirm(\'Bạn có chắc muốn thay đổi trạng thái không?\')){window.location.href=\'' . route('items.status_change', $id) . '\'}"><span class="fa fa-solid fa-laptop '.($status == unactiveStatus ? 'laptop' : 'laptop-crack').'"></span></a>';
+                break;
+            case 'brands':
+                $html .= '<a onclick="event.stopImmediatePropagation();if(confirm(\'Bạn có chắc muốn thay đổi trạng thái không?\')){window.location.href=\'' . route('brands.status_change', $id) . '\'}"><span class="fa fa-solid fa-laptop '.($status == unactiveStatus ? 'laptop' : 'laptop-crack').'"></span></a>';
+                break;
+            case 'categories':
+                $html .= '<a onclick="event.stopImmediatePropagation();if(confirm(\'Bạn có chắc muốn thay đổi trạng thái không?\')){window.location.href=\'' . route('categories.status_change', $id) . '\'}"><span class="fa fa-solid fa-laptop '.($status == unactiveStatus ? 'laptop' : 'laptop-crack').'"></span></a>';
+                break;
+            case 'products':
+                $html .= '<a onclick="event.stopImmediatePropagation();if(confirm(\'Bạn có chắc muốn thay đổi trạng thái không?\')){window.location.href=\'' . route('products.status_change', $id) . '\'}"><span class="fa fa-solid fa-laptop '.($status == unactiveStatus ? 'laptop' : 'laptop-crack').'"></span></a>';
+                break;
+            case 'payments':
+                $html .= '<a onclick="event.stopImmediatePropagation();if(confirm(\'Bạn có chắc muốn thay đổi trạng thái không?\')){window.location.href=\'' . route('payments.status_change', $id) . '\'}"><span class="fa fa-solid fa-laptop '.($status == unactiveStatus ? 'laptop' : 'laptop-crack').'"></span></a>';
+                break;
+            default:
+                break;
         }
     }
     return $html;
 }
+

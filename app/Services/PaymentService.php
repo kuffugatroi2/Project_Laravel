@@ -152,59 +152,25 @@ class PaymentService
         }
     }
 
-    public function activePayment($id)
+    public function statusChange($id)
     {
         $payment = $this->edit($id);
-        if (isset($payment['success']) && $payment['success'] == false) {
-            return [
-                'success' => false,
-                'error_subcode' => 400,
-                'message' => 'Phương thức thanh toán không tồn tại!'
-            ];
-        }
-        DB::beginTransaction();
-        try {
-            $payment = $this->paymentRepository->activePayment($id);
-            DB::commit();
-            return [
-                'status' => 200,
-                'data' => $payment,
-                'message' => 'Kích hoạt phương thức thanh toán thành công!'
-            ];
-        } catch(Exception $e) {
-            DB::rollBack();
-            return [
-                'status' => 500,
-                'message' => 'Kích hoạt phương thức thanh toán thất bại!',
-                'error' => $e->getMessage()
-            ];
-        }
-    }
+        if (isset($payment['success']))
+            return $payment;
 
-    public function unactivePayment($id)
-    {
-        $payment = $this->edit($id);
-        if (isset($payment['success']) && $payment['success'] == false) {
-            return [
-                'success' => false,
-                'error_subcode' => 400,
-                'message' => 'Phương thức thanh toán không tồn tại!'
-            ];
-        }
+        $paymentStatus = $payment['data']['payment_status'];
         DB::beginTransaction();
         try {
-            $payment = $this->paymentRepository->unactivePayment($id);
+            $payment = $this->paymentRepository->statusChange($id, $paymentStatus);
             DB::commit();
             return [
                 'status' => 200,
-                'data' => $payment,
-                'message' => 'Tắt kích hoạt phương thức thanh toán thành công!'
+                'status_after_change' => $payment
             ];
         } catch(Exception $e) {
             DB::rollBack();
             return [
                 'status' => 500,
-                'message' => 'Tắt kích hoạt phương thức thanh toán thất bại!',
                 'error' => $e->getMessage()
             ];
         }

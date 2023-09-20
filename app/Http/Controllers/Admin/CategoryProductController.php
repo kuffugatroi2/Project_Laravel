@@ -99,25 +99,19 @@ class CategoryProductController extends Controller
         }
     }
 
-    public function activeCategory($id)
+    public function statusChange($id)
     {
-        $category = $this->categoryProductService->activeCategory($id);
+        $category = $this->categoryProductService->statusChange($id);
         if (isset($category['success']) && $category['success'] == false) {
             return redirect()->route('categories.index')->with('error', $category['message']);
         }
-        if ($category) {
-            return redirect()->route('categories.index')->with('message', 'kích hoạt thể loại sản phẩm thành công!');
-        }
-    }
-
-    public function unactiveCategory($id)
-    {
-        $category = $this->categoryProductService->unactiveCategory($id);
-        if (isset($category['success']) && $category['success'] == false) {
-            return redirect()->route('categories.index')->with('error', $category['message']);
-        }
-        if ($category) {
-            return redirect()->route('categories.index')->with('message', 'Tắt kích hoạt thể loại sản phẩm thành công!');
+        switch ($category['status_after_change']) {
+            case Category::unactiveStatus:
+                return redirect()->route('categories.index')->with('message', 'Tắt kích hoạt thể loại sản phẩm thành công!');
+            case Category::activeStatus:
+                return redirect()->route('categories.index')->with('message', 'Kích hoạt thể loại sản phẩm thành công!');
+            default:
+                return redirect()->route('categories.index');
         }
     }
 }

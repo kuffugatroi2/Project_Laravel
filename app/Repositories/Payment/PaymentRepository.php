@@ -72,14 +72,12 @@ class PaymentRepository implements PaymentRepositoryInterface
         return $payment;
     }
 
-    public function activePayment($id)
+    public function statusChange($id, $paymentStatus)
     {
-        return Payment::where('payment_id', $id)->update(['payment_status' => 1]);
-    }
-
-    public function unactivePayment($id)
-    {
-        return Payment::where('payment_id', $id)->update(['payment_status' => 0]);
+        $paymentStatus = $paymentStatus === Payment::paymentMethodActiveStatus ? Payment::paymentMethodUnactiveStatus : Payment::paymentMethodActiveStatus;
+        Payment::where('payment_id', $id)->update(['payment_status' => $paymentStatus]);
+        $payment = $this->edit($id);
+        return $payment['payment_status'];
     }
 
     public function getArrayPaymentMethod()

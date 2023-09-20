@@ -152,26 +152,24 @@ class TypeItemService
     public function statusChange($id)
     {
         $item = $this->edit($id);
+        if (isset($item['success']))
+            return $item;
+
         $itemStatus = $item['data']['item_status'];
-        if (isset($item['success']) && $item['success'] == false) {
-            return [
-                'success' => false,
-                'error_subcode' => 400,
-                'message' => 'sản phẩm không tồn tại!'
-            ];
-        }
         DB::beginTransaction();
         try {
             $item = $this->typeItemRepository->statusChange($id, $itemStatus);
             DB::commit();
             return [
                 'status' => 200,
+                'success' => true,
                 'status_after_change' => $item
             ];
         } catch(Exception $e) {
             DB::rollBack();
             return [
                 'status' => 500,
+                'success' => false,
                 'error' => $e->getMessage()
             ];
         }

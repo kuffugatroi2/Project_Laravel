@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Payment\CreatePaymentRequest;
 use App\Http\Requests\Payment\UpdatePaymentRequest;
+use App\Models\Payment;
 use App\Services\PaymentService;
 use Illuminate\Http\Request;
 
@@ -95,29 +96,19 @@ class PaymentController extends Controller
         }
     }
 
-    public function activePayment($id)
+    public function statusChange($id)
     {
-        $payment = $this->paymentService->activePayment($id);
+        $payment = $this->paymentService->statusChange($id);
         if (isset($payment['success']) && $payment['success'] == false) {
             return redirect()->route('payments.index')->with('error', $payment['message']);
         }
-        if ($payment['status'] == 200) {
-            return redirect()->route('payments.index')->with('message', $payment['message']);
-        } else {
-            return redirect()->route('payments.index')->with('error', $payment['message']);
-        }
-    }
-
-    public function unactivePayment($id)
-    {
-        $payment = $this->paymentService->unactivePayment($id);
-        if (isset($payment['success']) && $payment['success'] == false) {
-            return redirect()->route('payments.index')->with('error', $payment['message']);
-        }
-        if ($payment['status'] == 200) {
-            return redirect()->route('payments.index')->with('message', $payment['message']);
-        } else {
-            return redirect()->route('payments.index')->with('error', $payment['message']);
+        switch ($payment['status_after_change']) {
+            case Payment::paymentMethodUnactiveStatus:
+                return redirect()->route('payments.index')->with('message', 'Tắt Kích hoạt phương thức thanh toán thành công!');
+            case Payment::paymentMethodActiveStatus:
+                return redirect()->route('payments.index')->with('message', 'Kích hoạt phương thức thanh toán thành công!');
+            default:
+                return redirect()->route('payments.index');
         }
     }
 }

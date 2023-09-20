@@ -79,19 +79,15 @@ class CategoryProductRepository implements CategoryProductRepositoryInterface
         return $category;
     }
 
-    public function activeCategory($id)
+    public function statusChange($id, $categoryStatus)
     {
-        $category = Category::where('category_id', $id)->update(['category_status' => Category::activeStatus]);
-        return $category;
+        $categoryStatus = $categoryStatus === Category::activeStatus ? Category::unactiveStatus : Category::activeStatus;
+        Category::where('category_id', $id)->update(['category_status' => $categoryStatus]);
+        $category = $this->edit($id);
+        return $category['category_status'];
     }
 
-    public function unactiveCategory($id)
-    {
-        $category = Category::where('category_id', $id)->update(['category_status' => Category::unactiveStatus]);
-        return $category;
-    }
-
-    public function checkCategory($request)
+    public function checkCategory()
     {
         $check = Category::where('category_name', request()->category_product_name)->first();
         return $check;

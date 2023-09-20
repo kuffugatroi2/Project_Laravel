@@ -12,7 +12,7 @@
 
     <!-- Title Page-->
     <link rel="shortcut icon" type="image/x-icon" href="frontend/images/thumbnail.png">
-    <title>{{$title1}}</title>
+    <title>{{ $title1 }}</title>
 
     <!-- Fontfaces CSS-->
     <link href="be/css/font-face.css" rel="stylesheet" media="all">
@@ -34,7 +34,7 @@
 
     <!-- Main CSS-->
     <link href="be/css/theme.css" rel="stylesheet" media="all">
-    <link rel="stylesheet" href="/be/css/style-backend.css" type="text/css"/>
+    <link rel="stylesheet" href="/be/css/style-backend.css" type="text/css" />
     <link href="/frontend/css/sweetalert.css" rel="stylesheet">
 
 </head>
@@ -81,7 +81,7 @@
 
     <!-- Main JS-->
     <script src="be/js/main.js"></script>
-    <script type="text/javascript" language="javascript" src="admin_asset/ckeditor/ckeditor.js" ></script>
+    <script type="text/javascript" language="javascript" src="admin_asset/ckeditor/ckeditor.js"></script>
     {{-- <script type="text/javascript">
         $(window).load( function() {
 
@@ -114,6 +114,23 @@
     <script src="/frontend/js/sweetalert.min.js"></script>
 
     @yield('script')
+    <script>
+        /*
+            Trong đoạn mã này sẽ:
+            Đặt giá trị 'opacity' của phần tử có id "alert" thành 0 sau 10s
+            Sau đó, đặt thuộc tính 'display' thành none sau 2s để ẩn phần tử
+            (Hiệu ứng mờ dần sẽ diễn ra trong vòng 2s)
+        */
+        setTimeout(function() {
+            // Lấy thẻ div chứa thông báo
+            var alertDiv = document.getElementById('alert');
+            alertDiv.style.opacity = 0;
+            setTimeout(function() {
+                alertDiv.style.display = 'none';
+            }, 2000); // Mất sau 2 giây
+        }, 10000); // Hiển thị trong 10 giây
+
+    </script>
 </body>
 
 </html>

@@ -170,26 +170,24 @@ class BrandProductService
     public function statusChange($id)
     {
         $brand = $this->edit($id);
+        if (isset($brand['success']))
+            return $brand;
+
         $brandStatus = $brand['data']['brand_status'];
-        if (isset($item['success']) && $item['success'] == false) {
-            return [
-                'success' => false,
-                'error_subcode' => 400,
-                'message' => 'sản phẩm không tồn tại!'
-            ];
-        }
         DB::beginTransaction();
         try {
             $brand = $this->brandProductRepository->statusChange($id, $brandStatus);
             DB::commit();
             return [
                 'status' => 200,
+                'success' => true,
                 'status_after_change' => $brand
             ];
         } catch(Exception $e) {
             DB::rollBack();
             return [
                 'status' => 500,
+                'success' => false,
                 'error' => $e->getMessage()
             ];
         }

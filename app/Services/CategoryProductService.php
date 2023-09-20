@@ -166,50 +166,20 @@ class CategoryProductService
         }
     }
 
-    public function activeCategory($id)
+    public function statusChange($id)
     {
         $category = $this->edit($id);
-        if (isset($category['success']) && $category['success'] == false) {
-            return [
-                'success' => false,
-                'error_subcode' => 400,
-                'message' => 'Thể loại sản phẩm không tồn tại!'
-            ];
-        }
-        DB::beginTransaction();
-        try {
-            $category = $this->categoryProductRepository->activeCategory($id);
-            DB::commit();
-            return [
-                'status' => 200,
-                'data' => $category
-            ];
-        } catch(Exception $e) {
-            DB::rollBack();
-            return [
-                'status' => 500,
-                'error' => $e->getMessage()
-            ];
-        }
-    }
+        if (isset($category['success']))
+            return $category;
 
-    public function unactiveCategory($id)
-    {
-        $category = $this->edit($id);
-        if (isset($category['success']) && $category['success'] == false) {
-            return [
-                'success' => false,
-                'error_subcode' => 400,
-                'message' => 'Thể loại sản phẩm không tồn tại!'
-            ];
-        }
+        $categoryStatus = $category['data']['category_status'];
         DB::beginTransaction();
         try {
-            $category = $this->categoryProductRepository->unactiveCategory($id);
+            $category = $this->categoryProductRepository->statusChange($id, $categoryStatus);
             DB::commit();
             return [
                 'status' => 200,
-                'data' => $category
+                'status_after_change' => $category
             ];
         } catch(Exception $e) {
             DB::rollBack();

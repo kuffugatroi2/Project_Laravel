@@ -79,13 +79,10 @@ class BrandProductRepository implements BrandProductRepositoryInterface
 
     public function statusChange($id, $brandStatus)
     {
-        if ($brandStatus == BrandProduct::unactiveStatus) {
-            BrandProduct::where('brand_id', $id)->update(['brand_status' => BrandProduct::activeStatus]);
-        } else {
-            BrandProduct::where('brand_id', $id)->update(['brand_status' => BrandProduct::unactiveStatus]);
-        }
+        $brandStatus = $brandStatus === BrandProduct::activeStatus ? BrandProduct::unactiveStatus : BrandProduct::activeStatus;
+        BrandProduct::where('brand_id', $id)->update(['brand_status' => $brandStatus]);
         $brand = $this->edit($id);
-        return $brand['item_status'];
+        return $brand['brand_status'];
     }
 
     public function getArrayNameProduct()
