@@ -70,11 +70,8 @@ class TypeItemRepository implements TypeItemRepositoryInterface
 
     public function statusChange($id, $itemStatus)
     {
-        if ($itemStatus == ItemType::unactiveStatus) {
-            ItemType::where('item_id', $id)->update(['item_status' => ItemType::activeStatus]);
-        } else {
-            ItemType::where('item_id', $id)->update(['item_status' => ItemType::unactiveStatus]);
-        }
+        $itemStatus = $itemStatus === ItemType::activeStatus ? ItemType::unactiveStatus : ItemType::activeStatus;
+        ItemType::where('item_id', $id)->update(['item_status' => $itemStatus]);
         $item = $this->edit($id);
         return $item['item_status'];
     }

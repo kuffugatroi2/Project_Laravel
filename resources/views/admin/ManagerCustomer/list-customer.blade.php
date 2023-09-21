@@ -4,18 +4,9 @@
 <div class="main-content">
     <div class="section__content section__content--p30">
         <div class="container-fluid">
-            <?php
-                $message = Session::get('message');
-                if ($message) {
-                    echo '<div class="alert alert-success">'.$message.'</div>';
-                    Session::put('message', null);
-                }
-            ?>
-            @if (session('error'))
-            <div class="alert alert-danger">
-                {{session('error')}}
+            <div id="alert" style="opacity: 1; transition: opacity 2s;">
+                @include('alert')
             </div>
-            @endif
             <form action="{{ route('customer.get_list_customer') }}" method="GET">
               <span class="margin-left">Tên khách hàng:</span>
               <input type="text" name="search-name-customer" class="input-search margin-left input-border">

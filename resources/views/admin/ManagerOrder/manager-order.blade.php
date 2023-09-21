@@ -4,19 +4,9 @@
 <div class="main-content">
     <div class="section__content section__content--p30">
         <div class="container-fluid">
-            {{-- @include('alert') --}}
-            <?php
-                $message = Session::get('message');
-                if ($message) {
-                    echo '<div class="alert alert-success">'.$message.'</div>';
-                    Session::put('message', null);
-                }
-            ?>
-            @if (session('error'))
-            <div class="alert alert-danger">
-                {{session('error')}}
+            <div id="alert" style="opacity: 1; transition: opacity 2s;">
+                @include('alert')
             </div>
-            @endif
             <form action="{{ route('order.manager_order') }}" method="GET">
               <span class="margin-left">Trạng thái:</span>
               <select name="select-status" id="select-status" class="from-control input-search margin-left">

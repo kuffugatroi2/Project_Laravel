@@ -141,15 +141,13 @@ class TypeItemController extends Controller
         if (isset($item['success']) && $item['success'] == false) {
             return redirect()->route('items.index')->with('error', $item['message']);
         }
-        if ($item['status'] == 200 && $item['status_after_change'] == ItemType::unactiveStatus) {
-            return redirect()->route('items.index')->with('message', 'Tắt kích hoạt loại sản phẩm thành công!');
-        } else if ($item['status'] == 200 && $item['status_after_change'] == ItemType::activeStatus) {
-            return redirect()->route('items.index')->with('message', 'kích hoạt loại sản phẩm thành công!');
+        switch ($item['status_after_change']) {
+            case ItemType::unactiveStatus:
+                return redirect()->route('items.index')->with('message', 'Tắt kích hoạt loại sản phẩm thành công!');
+            case ItemType::activeStatus:
+                return redirect()->route('items.index')->with('message', 'Kích hoạt sản loại phẩm thành công!');
+            default:
+                return redirect()->route('items.index');
         }
-    }
-
-    public function name($id)
-    {
-        return "benben";
     }
 }

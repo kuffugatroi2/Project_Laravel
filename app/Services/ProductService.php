@@ -335,52 +335,20 @@ class ProductService
         }
     }
 
-    public function activeProduct($id)
+    public function statusChange($id)
     {
         $product = $this->edit($id);
-        if (isset($product['success']) && $product['success'] == false) {
-            return [
-                'success' => false,
-                'error_subcode' => 400,
-                'message' => 'sản phẩm không tồn tại!'
-            ];
-        }
-        DB::beginTransaction();
-        try {
-            $product = $this->productRepository->activeProduct($id);
-            DB::commit();
-            return [
-                'status' => 200,
-                'data' =>  $product,
-                'message' => 'kích hoạt sản phẩm thành công!'
-            ];
-        } catch(Exception $e) {
-            DB::rollBack();
-            return [
-                'status' => 500,
-                'error' => $e->getMessage()
-            ];
-        }
-    }
+        if (isset($product['success']))
+            return $product;
 
-    public function unactiveProduct($id)
-    {
-        $product = $this->edit($id);
-        if (isset($product['success']) && $product['success'] == false) {
-            return [
-                'success' => false,
-                'error_subcode' => 400,
-                'message' => 'sản phẩm không tồn tại!'
-            ];
-        }
+        $productStatus = $product['data']['product_status'];
         DB::beginTransaction();
         try {
-            $product = $this->productRepository->unactiveProduct($id);
+            $product = $this->productRepository->statusChange($id, $productStatus);
             DB::commit();
             return [
                 'status' => 200,
-                'data' =>  $product,
-                'message' => 'Tắt kích hoạt sản phẩm thành công!'
+                'status_after_change' => $product
             ];
         } catch(Exception $e) {
             DB::rollBack();

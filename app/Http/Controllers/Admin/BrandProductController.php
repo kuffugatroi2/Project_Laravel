@@ -111,10 +111,13 @@ class BrandProductController extends Controller
         if (isset($brand['success']) && $brand['success'] == false) {
             return redirect()->route('brands.index')->with('error', $brand['message']);
         }
-        if ($brand['status'] == 200 && $brand['status_after_change'] == BrandProduct::unactiveStatus) {
-            return redirect()->route('brands.index')->with('message', 'Tắt kích hoạt thương hiệu sản phẩm thành công!');
-        } else if ($brand['status'] == 200 && $brand['status_after_change'] == BrandProduct::activeStatus) {
-            return redirect()->route('brands.index')->with('message', 'Kích hoạt thương hiệu sản phẩm thành công!');
+        switch ($brand['status_after_change']) {
+            case BrandProduct::unactiveStatus:
+                return redirect()->route('brands.index')->with('message', 'Tắt kích hoạt thương hiệu sản phẩm thành công!');
+            case BrandProduct::activeStatus:
+                return redirect()->route('brands.index')->with('message', 'Kích hoạt thương hiệu sản phẩm thành công!');
+            default:
+                return redirect()->route('brands.index');
         }
     }
 }

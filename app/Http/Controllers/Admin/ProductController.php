@@ -160,25 +160,19 @@ class ProductController extends Controller
         }
     }
 
-    public function activeProduct($id)
+    public function statusChange($id)
     {
-        $product = $this->productService->activeProduct($id);
+        $product = $this->productService->statusChange($id);
         if (isset($product['success']) && $product['success'] == false) {
             return redirect()->route('products.index')->with('error', $product['message']);
         }
-        if ($product) {
-            return redirect()->route('products.index')->with('message',  $product['message']);
-        }
-    }
-
-    public function unactiveProduct($id)
-    {
-        $product = $this->productService->unactiveProduct($id);
-        if (isset($product['success']) && $product['success'] == false) {
-            return redirect()->route('products.index')->with('error', $product['message']);
-        }
-        if ($product) {
-            return redirect()->route('products.index')->with('message',  $product['message']);
+        switch ($product['status_after_change']) {
+            case Category::unactiveStatus:
+                return redirect()->route('products.index')->with('message', 'Tắt kích hoạt sản phẩm thành công!');
+            case Category::activeStatus:
+                return redirect()->route('products.index')->with('message', 'Kích hoạt sản phẩm thành công!');
+            default:
+                return redirect()->route('products.index');
         }
     }
 
