@@ -15,36 +15,10 @@ class ManagerOrder extends Controller
 {
     public function manager_order(Request $request)
     {
-        $allOrder = Order::join('tbl_customers', 'tbl_order.customer_id','=','tbl_customers.customer_id')
-                ->select('tbl_order.*', 'tbl_customers.customer_name');
-        if (
-            isset($request['select-status'])
-            &&
-            in_array($request['select-status'], Order::arrayStatus)
-        ) {
-            $allOrder->where('tbl_order.order_status', $request['select-status']);
-        } elseif (
-            isset($request['select-status'])
-            &&
-            !in_array($request['select-status'], Order::arrayStatus)
-            &&
-            strcmp ( $request['select-status'] , Order::allStatus ) != 0
-        ) {
-            $allOrder = [];
-            return view('admin.ManagerOrder.manager-order', [
-                'title1' => 'Danh sách đơn hàng',
-                'title2' => 'Liệt kê danh sách đơn hàng'
-            ], compact('allOrder'));
-        }
-        $keyword = $request['search-name-customer'];
-        if (isset($request['search-name-customer']) && !is_null($request['search-name-customer'])) {
-            $allOrder->where('tbl_customers.customer_name','like','%'.$keyword.'%' );
-        }
-        $allOrder = $allOrder->orderby('tbl_order.order_id','desc')->paginate(10);
         return view('admin.ManagerOrder.manager-order', [
             'title1' => 'Danh sách đơn hàng',
             'title2' => 'Liệt kê danh sách đơn hàng'
-        ], compact('allOrder'));
+        ], compact('request'));
     }
 
     public function view_order($order_id)
